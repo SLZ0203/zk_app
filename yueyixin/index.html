@@ -1,0 +1,94 @@
+<!--阅医信页面-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+  <title>Title</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="dist/css/swiper.min.css">
+</head>
+<body>
+<div id="app">
+  <div class="banner">
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img src="images/banner.png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img src="images/banner.png" alt="">
+        </div>
+        <div class="swiper-slide">
+          <img src="images/banner.png" alt="">
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="nav_list">
+    <li class="nav_item">
+      <img src="images/1.png" alt="">
+      <p>公司略引</p>
+    </li>
+    <li class="nav_item">
+      <img src="images/2.png" alt="">
+      <p>行业动态</p>
+    </li>
+    <li class="nav_item">
+      <img src="images/3.png" alt="">
+      <p>医信讲堂</p>
+    </li>
+  </ul>
+  <ul class="news_list">
+    <li class="news_item" v-for="(item,index) in news" :key="index">
+      <div class="text">
+        {{item.text}}
+      </div>
+      <img :src="item.img" alt="">
+    </li>
+  </ul>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="dist/js/swiper.min.js"></script>
+<script src="js/index.js"></script>
+<script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
+</body>
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      news: [
+        {
+          text: '中科医信技术团队携手北京朝阳医院开展安全隐患培训',
+          img: 'images/n1.jpg'
+        },
+        {
+          text: '医院后勤服务社会化要持续推进',
+          img: 'images/n2.jpg'
+        },
+        {
+          text: '解读“健康雄安”规划：将建国家中医医疗中心实行居民健设',
+          img: 'images/n1.jpg'
+        },
+        {
+          text: '中科医信技术团队携手北京朝阳医院开展安全隐患培训',
+          img: 'images/n2.jpg'
+        },
+        {
+          text: '中科医信技术团队携手北京朝阳医院开展安全隐患培训',
+          img: 'images/n2.jpg'
+        },
+        {
+          text: '中科医信技术团队携手北京朝阳医院开展安全隐患培训',
+          img: 'images/n2.jpg'
+        },
+      ]
+    }
+  });
+  new Swiper('.swiper-container', {
+    loop: true, // 循环模式选项
+    autoplay: true,
+  })
+</script>
+</html>

@@ -1,0 +1,73 @@
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+#app .navBar {
+  width: 100%;
+  height: 0.77rem;
+  background: rgba(75, 100, 214, 1);
+  padding: 0 0.32rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#app .navBar :nth-child(1) {
+  width: 1.4rem;
+}
+
+#app .navBar :nth-child(2) {
+  width: 0.42rem;
+}
+
+#app .shade {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, .4);
+  position: fixed;
+  top: 0;
+  z-index: 10;
+}
+
+#app .navList {
+  width: 100%;
+  position: absolute;
+  z-index: 100;
+  background: #fff;
+}
+
+#app .navList .nav_item {
+  width: 100%;
+  padding: 0.32rem 0.3rem;
+  box-sizing: border-box;
+  font-size: 0.34rem;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  color: rgba(53, 53, 53, 1);
+  border-bottom: 1px solid #e5e5e5;
+  background-repeat: no-repeat;
+  background-size: 0.32rem;
+  background-position: 95%;
+}
+
+#app .navList .on {
+  background-image: url("../images/ic-right.png");
+}
+
+#app .newsList {
+  width: 100%;
+  margin-top: 0.2rem;
+}
+
+#app .newsList .news_item {
+  width: 100%;
+  height: 4rem;
+  margin-bottom: 0.2rem;
+}
+
+#app .newsList .news_item img {
+  width: 100%;
+  height: 100%;
+}

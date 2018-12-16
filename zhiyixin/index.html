@@ -1,0 +1,45 @@
+<!--知医信页面-->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+  <title>Title</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<script src="js/index.js"></script>
+<script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
+<body>
+<div id="app">
+  <div class="blank"></div>
+  <nav class="navBar">
+    <img src="images/logo.png" alt="">
+    <img src="images/ic-menu.png" @click="isShow=!isShow">
+  </nav>
+  <ul class="navList" v-show="isShow">
+    <li class="nav_item" v-for="(item,index) in navList" :key="index" :class="{on:num===index}" @click="num=index">
+      {{item}}
+    </li>
+  </ul>
+  <div class="shade" v-show="isShow" @click="isShow=false"></div>
+  <ul class="newsList">
+    <li class="news_item" v-for="(item,index) in newsList" :key="index">
+      <img :src="item" alt="">
+    </li>
+  </ul>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  const app = new Vue({
+    el: '#app',
+    data: {
+      num: '',
+      isShow: '',
+      navList: ['应急联动', '机电运维', '后勤管理', '安全监测', '职工服务',],
+      newsList: ["images/1.jpg", "images/2.jpg", "images/1.jpg", "images/2.jpg", "images/1.jpg"]
+    }
+  })
+</script>
+</html>
