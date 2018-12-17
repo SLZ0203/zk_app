@@ -30,15 +30,8 @@
     methods: {
       choose(e) {
         this.province = e.target.innerText;
-        this.$router.replace({
-          path: '/hospital',
-          query: {
-            province: this.province
-          }
-        })
-      },
-      goBack(province) {
-
+        this.$store.dispatch('saveHosprovince', this.province);
+        this.$router.replace('/hospital')
       }
     },
     mounted() {

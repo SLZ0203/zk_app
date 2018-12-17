@@ -15,19 +15,14 @@
       return {
         list: ['医院安全', '员工服务', '后勤管理'],
         num: 0,
-        key: '',
       }
     },
     methods: {
       choose(e, index) {
         this.num = index;
-        this.key = e.target.innerText;
-        this.$router.replace({
-          path: '/hospital',
-          query: {
-            key: this.key
-          }
-        })
+        const key = e.target.innerText;
+        this.$store.dispatch('saveHosKeypoint', key);
+        this.$router.replace('/hospital')
       },
     }
   }

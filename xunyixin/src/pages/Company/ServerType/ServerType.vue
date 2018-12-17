@@ -15,19 +15,14 @@
       return {
         list: ['项目合作', '销售代理'],
         num: 0,
-        type: ''
       }
     },
     methods: {
       choose(e, index) {
-        this.type = e.target.innerText;
         this.num = index;
-        this.$router.replace({
-          path: '/company',
-          query: {
-            type: this.type
-          }
-        })
+        const type = e.target.innerText;
+        this.$store.dispatch('savecompanyServertype', type);
+        this.$router.replace('/company')
       },
     }
   }

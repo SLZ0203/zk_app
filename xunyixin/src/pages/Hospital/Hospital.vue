@@ -13,11 +13,11 @@
       </li>
       <li class="from_item right" @click="$router.push('/province')">
         <span>省份：</span>
-        <input type="text" placeholder="请选择" v-model="subList.province" readonly="readonly">
+        <input type="text" placeholder="请选择（必选）" v-model="hosProvince" readonly="readonly">
       </li>
       <li class="from_item right" @click="$router.push('/keypoint')">
         <span>关注重点：</span>
-        <input type="text" placeholder="请选择" v-model="subList.type" readonly="readonly">
+        <input type="text" placeholder="请选择（必选）" v-model="hosKeyPoint" readonly="readonly">
       </li>
       <li class="from_item">
         <span>职位：</span>
@@ -41,14 +41,13 @@
 </template>
 <script>
   import {Toast} from 'mint-ui';
+  import {mapState} from 'vuex'
 
   export default {
     data() {
       return {
         subList: {
           name: '', //医院名称
-          province: '', //省份
-          type: '', //关注重点
           position: '', //职位
           linkman: '', //联系人
           telphone: '', //联系方式
@@ -56,13 +55,12 @@
         },
       }
     },
-    activated() {
-      this.subList.province = this.$route.query.province;
-      this.subList.type = this.$route.query.key
+    computed: {
+      ...mapState(['hosProvince', 'hosKeyPoint'])
     },
     methods: {
       sub() {
-        if (this.subList.name && this.subList.province && this.subList.position
+        if (this.subList.name && this.hosProvince && this.hosKeyPoint && this.subList.position
           && this.subList.linkman && this.subList.telphone) {
           return true
         } else {
@@ -72,8 +70,10 @@
       submit() {
         if (!this.subList.name) {
           return Toast('请输入医院名称')
-        } else if (!this.subList.province) {
+        } else if (!this.hosProvince) {
           return Toast('请选择您的省份')
+        } else if (!this.hosKeyPoint) {
+          return Toast('请选择您的关注重点')
         } else if (!this.subList.position) {
           return Toast('请输入您的职位')
         } else if (!this.subList.linkman) {
@@ -124,14 +124,14 @@
           display block
           width 30%
           font-size: 0.32rem;
-          font-family:PingFangSC-Regular;
-          color:rgba(53,53,53,1);
+          font-family: PingFangSC-Regular;
+          color: rgba(53, 53, 53, 1);
         input
           height 90%
           outline: none;
           font-size: 0.32rem;
-          font-family:PingFangSC-Regular;
-          color:rgba(53,53,53,1);
+          font-family: PingFangSC-Regular;
+          color: rgba(53, 53, 53, 1);
           &::-webkit-input-placeholder
             font-size: 0.28rem;
             font-family: PingFangSC-Light;
@@ -150,8 +150,8 @@
           height: 0.99rem;
           line-height: 0.99rem;
           font-size: 0.32rem;
-          font-family:PingFangSC-Regular;
-          color:rgba(53,53,53,1);
+          font-family: PingFangSC-Regular;
+          color: rgba(53, 53, 53, 1);
         textarea
           width: 100%;
           height: 1.96rem;

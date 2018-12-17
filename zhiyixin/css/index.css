@@ -56,18 +56,26 @@
   background-image: url("../images/ic-right.png");
 }
 
-#app .newsList {
+#app .scroll_wrap {
   width: 100%;
-  margin-top: 0.2rem;
+  height: 100%;
+  overflow: hidden;
 }
 
-#app .newsList .news_item {
+#app .scroll_wrap .newsList {
+  width: 100%;
+  margin-top: 0.2rem;
+  padding-bottom: 0.97rem;
+  box-sizing: border-box;
+}
+
+#app .scroll_wrap .newsList .news_item {
   width: 100%;
   height: 4rem;
   margin-bottom: 0.2rem;
 }
 
-#app .newsList .news_item img {
+#app .scroll_wrap .newsList .news_item img {
   width: 100%;
   height: 100%;
 }

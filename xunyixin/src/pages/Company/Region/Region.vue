@@ -31,12 +31,8 @@
     methods: {
       choose(e) {
         this.region = e.target.innerText;
-        this.$router.replace({
-          path: '/company',
-          query: {
-            region: this.region
-          }
-        })
+        this.$store.dispatch('savecomanyRegion', this.region);
+        this.$router.replace('/company')
       },
     },
     mounted() {

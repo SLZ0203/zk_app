@@ -13,7 +13,7 @@
       </li>
       <li class="from_item right" @click="$router.push('/region')">
         <span>省份/地区：</span>
-        <input type="text" placeholder="请选择" v-model="subList.region" readonly="readonly">
+        <input type="text" placeholder="请选择（必选）" v-model="companyRegion" readonly="readonly">
       </li>
       <li class="from_item">
         <span>职位：</span>
@@ -29,7 +29,7 @@
       </li>
       <li class="from_item right" @click="$router.push('/servertype')">
         <span>服务类别：</span>
-        <input type="text" placeholder="请选择" v-model="subList.type" readonly="readonly">
+        <input type="text" placeholder="请选择（必选）" v-model="companyServerType" readonly="readonly">
       </li>
       <li class="text_wrap">
         <div class="name">备注信息：</div>
@@ -42,29 +42,27 @@
 </template>
 <script>
   import {Toast} from 'mint-ui';
+  import {mapState} from 'vuex'
 
   export default {
     data() {
       return {
         subList: {
           name: '', //公司名称
-          region: '', //省份/地区
           position: '', //职位
           linkman: '', //联系人
           telphone: '', //手机号
-          type: '', //服务类别
           note: ''//备注信息
         },
       }
     },
-    activated() {
-      this.subList.region = this.$route.query.region;
-      this.subList.type = this.$route.query.type;
+    computed: {
+      ...mapState(['companyRegion', 'companyServerType'])
     },
     methods: {
       sub() {
-        if (this.subList.name && this.subList.province && this.subList.position
-          && this.subList.linkman && this.subList.telphone) {
+        if (this.subList.name && this.companyRegion && this.subList.position
+          && this.subList.linkman && this.subList.telphone && this.companyServerType) {
           return true
         } else {
           return false
@@ -73,7 +71,7 @@
       submit() {
         if (!this.subList.name) {
           return Toast('请输入公司名称')
-        } else if (!this.subList.province) {
+        } else if (!this.companyRegion) {
           return Toast('请选择您的省份')
         } else if (!this.subList.position) {
           return Toast('请输入您的职位')
@@ -81,6 +79,8 @@
           return Toast('请输入您的姓名')
         } else if (!this.subList.telphone) {
           return Toast('请输入您的手机号')
+        } else if (!this.companyServerType) {
+          return Toast('请选择服务类别')
         } else {
           //提交表单
           Toast('提交成功')
@@ -126,14 +126,14 @@
           display block
           width 30%
           font-size: 0.32rem;
-          font-family:PingFangSC-Regular;
-          color:rgba(53,53,53,1);
+          font-family: PingFangSC-Regular;
+          color: rgba(53, 53, 53, 1);
         input
           height 90%
           outline: none;
           font-size: 0.32rem;
-          font-family:PingFangSC-Regular;
-          color:rgba(53,53,53,1);
+          font-family: PingFangSC-Regular;
+          color: rgba(53, 53, 53, 1);
           &::-webkit-input-placeholder
             font-size: 0.28rem;
             font-family: PingFangSC-Light;
@@ -152,8 +152,8 @@
           height: 0.99rem;
           line-height: 0.99rem;
           font-size: 0.32rem;
-          font-family:PingFangSC-Regular;
-          color:rgba(53,53,53,1);
+          font-family: PingFangSC-Regular;
+          color: rgba(53, 53, 53, 1);
         textarea
           width: 100%;
           height: 1.96rem;

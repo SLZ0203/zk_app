@@ -83,12 +83,13 @@ li {
 html, body {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 body {
   -webkit-text-size-adjust: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-  background-color: #EFEFF4;
+  background-color: #F3F6F9;
 }
 
 /*显示省略号*/
