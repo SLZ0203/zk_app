@@ -1,9 +1,9 @@
 <!--关注重点页面-->
 <template>
   <ul class="type_list">
-    <li class="ty_item" v-for="(item,index) in list" :key="index" @click="choose($event,index)"
+    <li class="ty_item" v-for="(item,index) in list" :key="index" @click="choose(item.title,item.id,index)"
         :class="{on:num===index}">
-      {{item}}
+      {{item.title}}
     </li>
   </ul>
 </template>
@@ -13,18 +13,27 @@
     name: "KeyPoint",
     data() {
       return {
-        list: ['医院安全', '员工服务', '后勤管理'],
+        list: [],
         num: 0,
       }
     },
+    mounted() {
+      this.$axios.get('http://yixin.581vv.com/api/focus').then(res => {
+        const result = res.data;
+        this.list = result.data;
+      })
+    },
     methods: {
-      choose(e, index) {
+      choose(focus, id, index) {
         this.num = index;
-        const key = e.target.innerText;
-        this.$store.dispatch('saveHosKeypoint', key);
+        const point = {
+          focus,
+          id
+        };
+        this.$store.dispatch('saveHosKeypoint', point);
         this.$router.replace('/hospital')
       },
-    }
+    },
   }
 </script>
 

@@ -31,6 +31,15 @@
   z-index: 10;
 }
 
+#app .fade-leave {
+  opacity: 1
+}
+
+#app .fade-leave-active {
+  opacity: 0;
+  transition: all .6s
+}
+
 #app .navList {
   width: 100%;
   position: absolute;

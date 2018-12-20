@@ -2,7 +2,7 @@ import {
   REVICE_HOSPROVINCE,
   REVICE_HOSKEYPOINT,
   REVICE_COMPANYREGION,
-  REVICE_COMPANYSERVERTYPE
+  REVICE_COMPANYSERVERTYPE,
 } from './mutation-types'
 
 export default {
@@ -15,11 +15,11 @@ export default {
     commit(REVICE_HOSKEYPOINT, {keypoint})
   },
   //同步保存公司页面选择的省市
-  savecomanyRegion({commit}, region) {
-    commit(REVICE_COMPANYREGION, {region})
+  saveComanyRegion({commit}, proCity) {
+    commit(REVICE_COMPANYREGION, {proCity})
   },
   //同步保存公司页面选择的服务项目
-  savecompanyServertype({commit}, servertype) {
+  saveCompanyServertype({commit}, servertype) {
     commit(REVICE_COMPANYSERVERTYPE, {servertype})
   },
 }

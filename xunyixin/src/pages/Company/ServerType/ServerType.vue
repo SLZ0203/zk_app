@@ -1,9 +1,9 @@
 <!--服务类别页面-->
 <template>
   <ul class="type_list">
-    <li class="ty_item" v-for="(item,index) in list" :key="index" @click="choose($event,index)"
+    <li class="ty_item" v-for="(item,index) in list" :key="index" @click="choose(item.title,item.id,index)"
         :class="{on:num===index}">
-      {{item}}
+      {{item.title}}
     </li>
   </ul>
 </template>
@@ -13,18 +13,27 @@
     name: "ServerType",
     data() {
       return {
-        list: ['项目合作', '销售代理'],
+        list: [],
         num: 0,
       }
     },
+    mounted() {
+      this.$axios.get('http://yixin.581vv.com/api/service_type').then(res => {
+        const result = res.data;
+        this.list = result.data;
+      })
+    },
     methods: {
-      choose(e, index) {
+      choose(title, id, index) {
         this.num = index;
-        const type = e.target.innerText;
-        this.$store.dispatch('savecompanyServertype', type);
+        const servertype = {
+          title,
+          id
+        };
+        this.$store.dispatch('saveCompanyServertype', servertype);
         this.$router.replace('/company')
       },
-    }
+    },
   }
 </script>
 

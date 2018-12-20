@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
-  <title>zhiyixin</title>
+  <title>知医信</title>
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/index.css">
 </head>
@@ -14,19 +14,22 @@
 <div id="app">
   <div class="blank"></div>
   <nav class="navBar">
-    <img src="images/logo.png" alt="">
+    <img src="images/logo.png" class="logoImg">
     <img src="images/ic-menu.png" @click="isShow=!isShow">
   </nav>
   <ul class="navList" v-show="isShow">
-    <li class="nav_item" v-for="(item,index) in navList" :key="index" :class="{on:num===index}" @click="scroll(index)">
+    <li class="nav_item" v-for="(item,index) in navArr" :key="index" :class="{on:num===index}" v-if="navArr"
+        @click="scroll(index)">
       {{item}}
     </li>
   </ul>
-  <div class="shade" v-show="isShow" @click="isShow=false"></div>
+  <transition name="fade">
+    <div class="shade" v-show="isShow" @click="isShow=false"></div>
+  </transition>
   <div class="scroll_wrap">
     <ul class="newsList" ref="newsUl">
-      <li class="news_item" v-for="(item,index) in newsList" :key="index">
-        <img :src="item" alt="">
+      <li class="news_item" v-for="(item,index) in imgArr[num]" :key="index" v-show="navArr">
+        <img :src="'http://yixin.581vv.com/upload/'+item.image" alt="">
       </li>
     </ul>
   </div>
@@ -34,45 +37,46 @@
 </body>
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/better-scroll@1.0.1/dist/bscroll.min.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
   new Vue({
     el: '#app',
     data: {
       num: 0,
-      isShow: '',
+      isShow: false,
       tops: [],
-      navList: ['应急联动', '机电运维', '后勤管理', '安全监测', '职工服务',],
-      newsList: ["images/1.jpg", "images/2.jpg", "images/1.jpg", "images/2.jpg", "images/1.jpg"]
+      navArr: [],
+      imgArr: [],
     },
     methods: {
       //页面滑动逻辑
       _initScroll() {
-        this.myScroll = new BScroll('.scroll_wrap', {
-          click: true
-        })
-      },
-      _initTop() {
-        const tops = [];
-        let top = 0;
-        tops.push(top);
-        const lis = this.$refs.newsUl.querySelectorAll('.news_item');
-        lis.forEach(li => {
-          top += li.clientHeight / 2;
-          tops.push(top)
-        });
-        this.tops = tops;
+        if (!this.myScroll) {
+          this.myScroll = new BScroll('.scroll_wrap', {
+            click: true
+          })
+        } else {
+          this.myScroll.refresh()
+        }
       },
       //导航栏点击逻辑
       scroll(index) {
         this.num = index;
-        const y = -this.tops[index];
-        this.myScroll.scrollTo(0, y, 500)
+        this.isShow = false
       }
     },
     mounted() {
-      this.$nextTick(() => {
-        this._initScroll();
-        this._initTop();
+      axios.get('http://yixin.581vv.com/api/get_navs').then(res => {
+        const result = res.data.data;
+        result.forEach(item => {
+          this.navArr.push(item.name);
+          this.imgArr.push(item.images);
+        });
+        this.$nextTick(() => {
+          this._initScroll();
+        })
+      }).catch(error => {
+        console.log(error);
       })
     }
   });

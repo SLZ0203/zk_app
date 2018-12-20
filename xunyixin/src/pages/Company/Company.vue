@@ -9,31 +9,31 @@
     <ul class="inner">
       <li class="from_item">
         <span>公司名称：</span>
-        <input type="text" placeholder="请输入公司名称（必填）" v-model="subList.name">
+        <input type="text" placeholder="请输入公司名称（必填）" v-model="name">
       </li>
       <li class="from_item right" @click="$router.push('/region')">
         <span>省份/地区：</span>
-        <input type="text" placeholder="请选择（必选）" v-model="companyRegion" readonly="readonly">
+        <input type="text" placeholder="请选择（必选）" v-model="companyRegion.name" readonly="readonly">
       </li>
       <li class="from_item">
         <span>职位：</span>
-        <input type="text" placeholder="请输入您的职位（必填）" v-model="subList.position">
+        <input type="text" placeholder="请输入您的职位（必填）" v-model="position">
       </li>
       <li class="from_item">
         <span>联系人：</span>
-        <input type="text" placeholder="请输入您的姓名（必填）" v-model="subList.linkman">
+        <input type="text" placeholder="请输入您的姓名（必填）" v-model="linkman">
       </li>
       <li class="from_item">
         <span>手机号：</span>
-        <input type="text" placeholder="请输入您的手机号（必填）" v-model="subList.telphone">
+        <input type="tel" placeholder="请输入您的手机号（必填）" v-model="telphone" maxlength="11">
       </li>
       <li class="from_item right" @click="$router.push('/servertype')">
         <span>服务类别：</span>
-        <input type="text" placeholder="请选择（必选）" v-model="companyServerType" readonly="readonly">
+        <input type="text" placeholder="请选择（必选）" v-model="companyServerType.title" readonly="readonly">
       </li>
       <li class="text_wrap">
         <div class="name">备注信息：</div>
-        <textarea cols="30" rows="10" maxlength="120" v-model="subList.note"></textarea>
+        <textarea cols="30" rows="10" maxlength="120" v-model="note"></textarea>
       </li>
       <li class="btn" :class="{submit: sub()}" @click="submit">提交
       </li>
@@ -47,47 +47,63 @@
   export default {
     data() {
       return {
-        subList: {
-          name: '', //公司名称
-          position: '', //职位
-          linkman: '', //联系人
-          telphone: '', //手机号
-          note: ''//备注信息
-        },
+        name: '', //公司名称
+        position: '', //职位
+        linkman: '', //联系人
+        telphone: '', //手机号
+        note: ''//备注信息
       }
-    },
-    computed: {
-      ...mapState(['companyRegion', 'companyServerType'])
     },
     methods: {
       sub() {
-        if (this.subList.name && this.companyRegion && this.subList.position
-          && this.subList.linkman && this.subList.telphone && this.companyServerType) {
+        if (this.name && this.companyRegion.name && this.position && this.linkman
+          && this.telphone && this.companyServerType.title) {
           return true
         } else {
           return false
         }
       },
       submit() {
-        if (!this.subList.name) {
+        if (!this.name) {
           return Toast('请输入公司名称')
-        } else if (!this.companyRegion) {
-          return Toast('请选择您的省份')
-        } else if (!this.subList.position) {
+        } else if (!this.companyRegion.name) {
+          return Toast('请选择您的省市')
+        } else if (!this.position) {
           return Toast('请输入您的职位')
-        } else if (!this.subList.linkman) {
+        } else if (!this.linkman) {
           return Toast('请输入您的姓名')
-        } else if (!this.subList.telphone) {
+        } else if (!this.telphone) {
           return Toast('请输入您的手机号')
-        } else if (!this.companyServerType) {
+        } else if (!this.isRightPhone) {
+          return Toast('请输入正确的手机号')
+        } else if (!this.companyServerType.title) {
           return Toast('请选择服务类别')
         } else {
-          //提交表单
-          Toast('提交成功')
+          this.$axios.post('http://yixin.581vv.com/api/cooperation_unit', {
+            corporate_name: this.name,
+            province_id: this.companyRegion.proIdproId,
+            city_id: this.companyRegion.cityId,
+            servicetype_id: this.companyServerType.id,
+            position: this.position,
+            contacts: this.linkman,
+            phone: this.telphone,
+            remarks: this.note
+          }).then(res => {
+            const result = res.data;
+            Toast(result.msg);
+            setTimeout(() => {
+              this.$router.go(0)
+            }, 3000);
+          })
         }
       }
     },
-    components: {}
+    computed: {
+      ...mapState(['companyRegion', 'companyServerType']),
+      isRightPhone() {
+        return /^1\d{10}$/.test(this.telphone)
+      }
+    },
   }
 </script>
 <style lang="stylus" rel="stylesheet/stylus">

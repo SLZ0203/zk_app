@@ -10,7 +10,15 @@
     </div>
     <div class="scroll_wrap">
       <ul class="add_list">
-        <li class="add_item" v-for="(item,index) in addList" :key="index" @click="choose($event)">{{item}}</li>
+        <li class="add_item" v-for="(item,index) in proCity" :key="index">
+          <div class="province">{{item.name}}</div>
+          <ul class="city_list">
+            <li class="city_item" v-for="(city,index) in item.citys" :key="index"
+                @click="choose(item.name,item.id,city.name,city.id)">
+              {{city.name}}
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
   </section>
@@ -23,22 +31,40 @@
     name: "Region",
     data() {
       return {
-        addList: ['北京', '上海', '广州', '深圳', '西安', '天津', '重庆', '北京', '上海', '广州', '深圳', '西安', '天津', '重庆', '北京', '上海', '广州', '深圳', '西安', '天津', '重庆'],
+        proCity: [],
         num: 0,
         region: ''
       }
     },
     methods: {
-      choose(e) {
-        this.region = e.target.innerText;
-        this.$store.dispatch('savecomanyRegion', this.region);
+      choose(pname, pid, cname, cid) {
+        this.region = pname + ' ' + cname;
+        const proCity = {
+          name: this.region,
+          proId: pid,
+          cityId: cid
+        };
+        this.$store.dispatch('saveComanyRegion', proCity);
         this.$router.replace('/company')
       },
+      _initScroll() {
+        this.$nextTick(() => {
+          if (!this.scroll) {
+            this.scroll = new BScroll('.scroll_wrap', {
+              scrollY: true,
+              click: true
+            })
+          } else {
+            this.scroll.refresh()
+          }
+        })
+      }
     },
     mounted() {
-      const scroll = new BScroll('.scroll_wrap', {
-        scrollY: true,
-        click: true
+      this.$axios.get('http://yixin.581vv.com/api/get_province_city').then(res => {
+        const result = res.data;
+        this.proCity = result.data;
+        this._initScroll();
       })
     }
   }
@@ -88,10 +114,18 @@
         overflow hidden
         .add_item
           width: 100%;
-          height: 0.99rem;
-          line-height: 0.99rem;
-          border-bottom: 0.01rem solid #e5e5e5;
-          font-size: 0.3rem;
+          line-height: 1rem;
           font-family: PingFangSC-Regular;
           color: rgba(53, 53, 53, 1);
+          .province
+            font-size: 0.3rem;
+            font-weight 600
+            border-bottom: 0.01rem solid #e5e5e5;
+          .city_list
+            width 100%
+            padding: 0 0.4rem
+            box-sizing: border-box;
+            .city_item
+              font-size 0.28rem
+              border-bottom: 0.01rem solid #e5e5e5;
 </style>

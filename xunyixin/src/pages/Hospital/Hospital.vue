@@ -9,31 +9,31 @@
     <ul class="inner">
       <li class="from_item">
         <span>医院名称：</span>
-        <input type="text" placeholder="请输入医院名称（必填）" v-model="subList.name">
+        <input type="text" placeholder="请输入医院名称（必填）" v-model="name">
       </li>
       <li class="from_item right" @click="$router.push('/province')">
         <span>省份：</span>
-        <input type="text" placeholder="请选择（必选）" v-model="hosProvince" readonly="readonly">
+        <input type="text" placeholder="请选择（必选）" v-model="hosProvince.name" readonly="readonly">
       </li>
       <li class="from_item right" @click="$router.push('/keypoint')">
         <span>关注重点：</span>
-        <input type="text" placeholder="请选择（必选）" v-model="hosKeyPoint" readonly="readonly">
+        <input type="text" placeholder="请选择（必选）" v-model="hosKeyPoint.focus" readonly="readonly">
       </li>
       <li class="from_item">
         <span>职位：</span>
-        <input type="text" placeholder="请输入您的职位（必填）" v-model="subList.position">
+        <input type="text" placeholder="请输入您的职位（必填）" v-model="position">
       </li>
       <li class="from_item">
         <span>联系人：</span>
-        <input type="text" placeholder="请输入您的姓名（必填）" v-model="subList.linkman">
+        <input type="text" placeholder="请输入您的姓名（必填）" v-model="linkman">
       </li>
       <li class="from_item">
         <span>联系方式：</span>
-        <input type="text" placeholder="请输入您的联系方式（必填）" v-model="subList.telphone">
+        <input type="text" placeholder="请输入您的联系方式（必填）" v-model="telphone">
       </li>
       <li class="text_wrap">
         <div class="name">备注信息：</div>
-        <textarea cols="30" rows="10" maxlength="120" v-model="subList.note"></textarea>
+        <textarea cols="30" rows="10" maxlength="120" v-model="note"></textarea>
       </li>
       <li class="btn" :class="{submit: sub()}" @click="submit">提交</li>
     </ul>
@@ -46,13 +46,11 @@
   export default {
     data() {
       return {
-        subList: {
-          name: '', //医院名称
-          position: '', //职位
-          linkman: '', //联系人
-          telphone: '', //联系方式
-          note: ''//备注信息
-        },
+        name: '', //医院名称
+        position: '', //职位
+        linkman: '', //联系人
+        telphone: '', //联系方式
+        note: ''//备注信息
       }
     },
     computed: {
@@ -60,29 +58,43 @@
     },
     methods: {
       sub() {
-        if (this.subList.name && this.hosProvince && this.hosKeyPoint && this.subList.position
-          && this.subList.linkman && this.subList.telphone) {
+        if (this.name && this.hosProvince.name && this.hosKeyPoint.focus && this.position
+          && this.linkman && this.telphone) {
           return true
         } else {
           return false
         }
       },
       submit() {
-        if (!this.subList.name) {
+        if (!this.name) {
           return Toast('请输入医院名称')
-        } else if (!this.hosProvince) {
+        } else if (!this.hosProvince.name) {
           return Toast('请选择您的省份')
-        } else if (!this.hosKeyPoint) {
+        } else if (!this.hosKeyPoint.focus) {
           return Toast('请选择您的关注重点')
-        } else if (!this.subList.position) {
+        } else if (!this.position) {
           return Toast('请输入您的职位')
-        } else if (!this.subList.linkman) {
+        } else if (!this.linkman) {
           return Toast('请输入联系人姓名')
-        } else if (!this.subList.telphone) {
+        } else if (!this.telphone) {
           return Toast('请输入您的联系方式')
         } else {
           //提交表单
-          Toast('提交成功')
+          this.$axios.post('http://yixin.581vv.com/api/hospital_users', {
+            hospital_name: this.name,
+            province: this.hosProvince.id,
+            focus_id: this.hosKeyPoint.id,
+            position: this.position,
+            contacts: this.linkman,
+            contact_info: this.telphone,
+            remarks: this.note
+          }).then(res => {
+            const result = res.data;
+            Toast(result.msg);
+            setTimeout(() => {
+              this.$router.go(0)
+            }, 3000);
+          })
         }
       }
     },

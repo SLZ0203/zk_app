@@ -9,7 +9,9 @@
     </div>
     <div class="scroll_wrap">
       <ul class="add_list">
-        <li class="add_item" v-for="(item,index) in proList" :key="index" @click="choose($event)">{{item}}</li>
+        <li class="add_item" v-for="(item,index) in proList" :key="index" @click="choose(item.name,item.id)">
+          {{item.name}}
+        </li>
       </ul>
     </div>
   </section>
@@ -22,22 +24,38 @@
     name: "Province",
     data() {
       return {
-        proList: ['北京', '上海', '广州', '深圳', '西安', '天津', '重庆', '北京', '上海', '广州', '深圳', '西安', '天津', '重庆', '北京', '上海', '广州', '深圳', '西安', '天津', '重庆'],
+        proList: [],
         num: 0,
         province: ''
       }
     },
     methods: {
-      choose(e) {
-        this.province = e.target.innerText;
-        this.$store.dispatch('saveHosprovince', this.province);
+      choose(name, id) {
+        this.province = name;
+        const provice = {
+          name, id
+        };
+        this.$store.dispatch('saveHosprovince', provice);
         this.$router.replace('/hospital')
+      },
+      _initScroll() {
+        this.$nextTick(() => {
+          if (!this.scroll) {
+            this.scroll = new BScroll('.scroll_wrap', {
+              scrollY: true,
+              click: true
+            })
+          } else {
+            this.scroll.refresh()
+          }
+        })
       }
     },
     mounted() {
-      const scroll = new BScroll('.scroll_wrap', {
-        scrollY: true,
-        click: true
+      this.$axios.get('http://yixin.581vv.com/api/get_province_city').then(res => {
+        const result = res.data;
+        this.proList = result.data;
+        this._initScroll();
       })
     }
   }
