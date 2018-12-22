@@ -9,6 +9,8 @@
 </template>
 
 <script>
+  import {baseUrl} from '../../../api'
+
   export default {
     name: "KeyPoint",
     data() {
@@ -18,7 +20,7 @@
       }
     },
     mounted() {
-      this.$axios.get('http://yixin.581vv.com/api/focus').then(res => {
+      this.$axios.get(baseUrl + '/api/focus').then(res => {
         const result = res.data;
         this.list = result.data;
       })

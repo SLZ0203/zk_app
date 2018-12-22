@@ -5,19 +5,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
   <title>知医信</title>
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="static/css/reset.css">
+  <link rel="stylesheet" href="static/css/index.css">
 </head>
-<script src="js/index.js"></script>
+<script src="static/js/index.js"></script>
 <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
 <body>
 <div id="app">
   <div class="blank"></div>
   <nav class="navBar">
-    <img src="images/logo.png" class="logoImg">
-    <img src="images/ic-menu.png" @click="isShow=!isShow">
+    <img src="static/images/logo.png" class="logoImg">
+    <img src="static/images/ic-menu.png" @click="isShow=!isShow">
   </nav>
-  <ul class="navList" v-show="isShow">
+  <ul class="navList" v-if="isShow">
     <li class="nav_item" v-for="(item,index) in navArr" :key="index" :class="{on:num===index}" v-if="navArr"
         @click="scroll(index)">
       {{item}}
@@ -39,46 +39,47 @@
 <script src="https://unpkg.com/better-scroll@1.0.1/dist/bscroll.min.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-  new Vue({
-    el: '#app',
-    data: {
-      num: 0,
-      isShow: false,
-      tops: [],
-      navArr: [],
-      imgArr: [],
-    },
-    methods: {
-      //页面滑动逻辑
-      _initScroll() {
-        if (!this.myScroll) {
-          this.myScroll = new BScroll('.scroll_wrap', {
-            click: true
+  const baseUrl =
+      new Vue({
+        el: '#app',
+        data: {
+          num: 0,
+          isShow: false,
+          tops: [],
+          navArr: [],
+          imgArr: [],
+        },
+        methods: {
+          //页面滑动逻辑
+          _initScroll() {
+            if (!this.myScroll) {
+              this.myScroll = new BScroll('.scroll_wrap', {
+                click: true
+              })
+            } else {
+              this.myScroll.refresh()
+            }
+          },
+          //导航栏点击逻辑
+          scroll(index) {
+            this.num = index;
+            this.isShow = false
+          }
+        },
+        mounted() {
+          axios.get('http://yixin.581vv.com/api/get_navs').then(res => {
+            const result = res.data.data;
+            result.forEach(item => {
+              this.navArr.push(item.name);
+              this.imgArr.push(item.images);
+            });
+            this.$nextTick(() => {
+              this._initScroll();
+            })
+          }).catch(error => {
+            console.log(error);
           })
-        } else {
-          this.myScroll.refresh()
         }
-      },
-      //导航栏点击逻辑
-      scroll(index) {
-        this.num = index;
-        this.isShow = false
-      }
-    },
-    mounted() {
-      axios.get('http://yixin.581vv.com/api/get_navs').then(res => {
-        const result = res.data.data;
-        result.forEach(item => {
-          this.navArr.push(item.name);
-          this.imgArr.push(item.images);
-        });
-        this.$nextTick(() => {
-          this._initScroll();
-        })
-      }).catch(error => {
-        console.log(error);
-      })
-    }
-  });
+      });
 </script>
 </html>

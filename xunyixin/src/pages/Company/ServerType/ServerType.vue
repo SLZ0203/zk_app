@@ -9,6 +9,7 @@
 </template>
 
 <script>
+  import {baseUrl} from '../../../api'
   export default {
     name: "ServerType",
     data() {
@@ -18,7 +19,7 @@
       }
     },
     mounted() {
-      this.$axios.get('http://yixin.581vv.com/api/service_type').then(res => {
+      this.$axios.get(baseUrl + '/api/service_type').then(res => {
         const result = res.data;
         this.list = result.data;
       })

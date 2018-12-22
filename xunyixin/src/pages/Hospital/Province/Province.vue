@@ -19,6 +19,7 @@
 
 <script>
   import BScroll from 'better-scroll'
+  import {baseUrl} from '../../../api'
 
   export default {
     name: "Province",
@@ -52,7 +53,7 @@
       }
     },
     mounted() {
-      this.$axios.get('http://yixin.581vv.com/api/get_province_city').then(res => {
+      this.$axios.get(baseUrl + '/api/get_province_city').then(res => {
         const result = res.data;
         this.proList = result.data;
         this._initScroll();

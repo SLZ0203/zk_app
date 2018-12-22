@@ -33,8 +33,8 @@
             <img :src="'http://yixin.581vv.com'+item.thumb" alt="">
           </a>
         </li>
+        <p class="add_more">{{moreTxt}}</p>
       </ul>
-      <p class="add_more">加载更多...</p>
     </div>
   </section>
 </template>
@@ -52,6 +52,7 @@
         banner: [],
         cate: [],
         news: [],
+        moreTxt: '加载更多'
       }
     },
     methods: {
@@ -71,43 +72,57 @@
             this.scroll = new BScroll(this.$refs.bscroll, {
               click: true,
               scrollY: true,
-              probeType: 3
-            });
+              pullUpLoad: {
+                threshold: -70, // 当上拉到超过底部 50px 时，
+              },
+              mouseWheel: {    // pc端同样能滑动
+                speed: 20,
+                invert: false
+              },
+              useTransition: false  // 防止iphone微信滑动卡顿
+            })
           } else {
             this.scroll.refresh();
           }
-          this.scroll.on('touchEnd', async (pos) => {
-            //上拉加载 总高度>下拉的高度+10 触发加载更多
-            if (this.scroll.maxScrollY > pos.y + 5) {
-              const news = await reqNews(1, 1);
-              this.news = news.data;
-              this.scroll.refresh();
-              //使用refresh 方法 来更新scroll  解决无法滚动的问题
-            }
+          this.scroll.on('pullingUp', async () => {
+            this.moreTxt = '加载中...';
+            await reqNews(1, 2).then(res => {
+              if (this.news.length < 60) {
+                this.moreTxt = '加载更多';
+                this.news = this.news.concat(res.data);
+                this.scroll.finishPullUp();//可以多次执行上拉刷新
+                this.scroll.refresh();
+              } else {
+                this.moreTxt = '没有更多数据了';
+              }
+            })
           })
         });
-
       },
       //按分类获取新闻逻辑
       async getNews(id) {
+        this.moreTxt = '加载更多';
         const news = await reqNews(id, 2);
         this.news = news.data;
       }
     },
     async mounted() {
-      const banner = await reqBanners();
-      this.banner = banner.data;
-      this._initSwiper();
-      const cate = await reqNewsCate();
-      const result = cate.data;
-      const arr = [];
-      result.forEach(item => {
-        arr.push(item.name)
+      let result;
+      //获取轮播图
+      reqBanners().then(res => {
+        this.banner = res.data.data;
+        this._initSwiper()
       });
-      this.cate = arr;
-      const news = await reqNews(1, 2);
-      this.news = news.data;
-      this._initScroll()
+      reqNewsCate().then(res => {
+        result = res.data.data;
+        result.forEach(item => {
+          this.cate.push(item.name)
+        })
+      });
+      await reqNews(1, 1).then(res => {
+        this.news = res.data;
+        this._initScroll()
+      })
     }
   }
 </script>

@@ -42,6 +42,7 @@
 <script>
   import {Toast} from 'mint-ui';
   import {mapState} from 'vuex'
+  import {baseUrl} from '../../api'
 
   export default {
     data() {
@@ -80,7 +81,7 @@
           return Toast('请输入您的联系方式')
         } else {
           //提交表单
-          this.$axios.post('http://yixin.581vv.com/api/hospital_users', {
+          this.$axios.post(baseUrl + '/api/hospital_users', {
             hospital_name: this.name,
             province: this.hosProvince.id,
             focus_id: this.hosKeyPoint.id,

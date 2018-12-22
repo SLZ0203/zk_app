@@ -43,6 +43,7 @@
 <script>
   import {Toast} from 'mint-ui';
   import {mapState} from 'vuex'
+  import {baseUrl} from '../../api'
 
   export default {
     data() {
@@ -79,7 +80,7 @@
         } else if (!this.companyServerType.title) {
           return Toast('请选择服务类别')
         } else {
-          this.$axios.post('http://yixin.581vv.com/api/cooperation_unit', {
+          this.$axios.post(baseUrl + '/api/cooperation_unit', {
             corporate_name: this.name,
             province_id: this.companyRegion.proIdproId,
             city_id: this.companyRegion.cityId,
