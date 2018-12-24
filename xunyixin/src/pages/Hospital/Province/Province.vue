@@ -30,6 +30,15 @@
         province: ''
       }
     },
+    mounted() {
+      this.$axios.get(baseUrl + '/api/get_province_city').then(res => {
+        const result = res.data;
+        if (result.code === 200) {
+          this.proList = result.data;
+          this._initScroll()
+        }
+      })
+    },
     methods: {
       choose(name, id) {
         this.province = name;
@@ -40,25 +49,16 @@
         this.$router.replace('/hospital')
       },
       _initScroll() {
-        this.$nextTick(() => {
-          if (!this.scroll) {
-            this.scroll = new BScroll('.scroll_wrap', {
-              scrollY: true,
-              click: true
-            })
-          } else {
-            this.scroll.refresh()
-          }
-        })
+        if (!this.scroll) {
+          this.scroll = new BScroll('.scroll_wrap', {
+            scrollY: true,
+            click: true
+          })
+        } else {
+          this.scroll.refresh()
+        }
       }
     },
-    mounted() {
-      this.$axios.get(baseUrl + '/api/get_province_city').then(res => {
-        const result = res.data;
-        this.proList = result.data;
-        this._initScroll();
-      })
-    }
   }
 </script>
 

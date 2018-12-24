@@ -1,6 +1,6 @@
 <!--省份/地区页面-->
 <template>
-  <section class="region_wrap">
+  <section class="region_wrap" v-show="proCity">
     <div class="first">
       <div class="left">
         <img src="../../../../static/images/ic-location.png" alt="">
@@ -43,7 +43,7 @@
         const proCity = {
           name: this.region,
           proId: pid,
-          cityId: cid
+          city: cid
         };
         this.$store.dispatch('saveComanyRegion', proCity);
         this.$router.replace('/company')
