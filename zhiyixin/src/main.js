@@ -7,8 +7,8 @@ import VueLazyload from 'vue-lazyload'
 import loading from '../static/images/load.gif'
 
 Vue.use(VueLazyload, {loading});
-
 Vue.config.productionTip = false;
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -30,7 +30,8 @@
         </li>
         <li class="from_item">
           <span>联系方式：</span>
-          <input type="text" placeholder="请输入您的联系方式（必填）" v-model="telphone">
+          <input type="tel" placeholder="请输入您的联系方式（必填）" v-model="telphone" maxlength="11"
+                 oninput="value=value.replace(/[^\d]/g,'')">
         </li>
         <li class="text_wrap">
           <div class="name">备注信息：</div>
@@ -45,7 +46,6 @@
   import BScroll from 'better-scroll'
   import {Toast} from 'mint-ui';
   import {mapState} from 'vuex'
-  import {baseUrl} from '../../api'
 
   export default {
     data() {
@@ -68,12 +68,19 @@
       }
     },
     computed: {
-      ...mapState(['hosProvince', 'hosKeyPoint'])
+      ...mapState(['hosProvince', 'hosKeyPoint']),
+      isRightPhone() {
+        if (this.telphone.length < 7) {
+          return false
+        } else {
+          return true
+        }
+      }
     },
     methods: {
       sub() {
         if (this.name && this.hosProvince.name && this.hosKeyPoint.focus && this.position
-          && this.linkman && this.telphone) {
+          && this.linkman && this.isRightPhone) {
           return true
         } else {
           return false
@@ -96,11 +103,11 @@
           return Toast('请输入您的职位')
         } else if (!this.linkman) {
           return Toast('请输入联系人姓名')
-        } else if (!this.telphone) {
-          return Toast('请输入您的联系方式')
+        } else if (!this.isRightPhone) {
+          return Toast('请输入正确的联系方式')
         } else {
           //提交表单
-          this.$axios.post(baseUrl + '/api/hospital_users', {
+          this.$axios.post('http://www.sinomis.com/api/hospital_users', {
             hospital_name: this.name,
             province: this.hosProvince.id,
             focus_id: this.hosKeyPoint.id,

@@ -26,7 +26,8 @@
         </li>
         <li class="from_item">
           <span>手机号：</span>
-          <input type="tel" placeholder="请输入您的手机号（必填）" v-model="telphone" maxlength="11">
+          <input type="tel" placeholder="请输入您的手机号（必填）" v-model="telphone" maxlength="11"
+                 oninput="value=value.replace(/[^\d]/g,'')">
         </li>
         <li class="from_item right" @click="$router.push('/servertype')">
           <span>服务类别：</span>
@@ -46,7 +47,6 @@
   import BScroll from 'better-scroll'
   import {Toast} from 'mint-ui';
   import {mapState} from 'vuex'
-  import {baseUrl} from '../../api'
 
   export default {
     data() {
@@ -71,7 +71,7 @@
     methods: {
       sub() {
         if (this.name && this.companyRegion.name && this.position && this.linkman
-          && this.telphone && this.companyServerType.title) {
+          && this.isRightPhone && this.companyServerType.title) {
           return true
         } else {
           return false
@@ -93,7 +93,7 @@
         } else if (!this.companyServerType.title) {
           return Toast('请选择服务类别')
         } else {
-          this.$axios.post('http://yixin.581vv.com/api/cooperation_unit', {
+          this.$axios.post('http://www.sinomis.com/api/cooperation_unit', {
             corporate_name: this.name,
             province_id: this.companyRegion.proId,
             city: this.companyRegion.city,

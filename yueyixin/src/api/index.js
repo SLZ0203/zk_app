@@ -5,7 +5,7 @@
 import axios from 'axios'
 import ajax from './ajax'
 
-const baseUrl = 'http://yixin.581vv.com';
+const baseUrl = 'http://www.sinomis.com';
 //获取轮播图
 export const reqBanners = () => axios.get(baseUrl + '/api/get_banner');
 //获取资讯分类

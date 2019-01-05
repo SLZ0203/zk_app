@@ -1,7 +1,7 @@
 <template>
-  <keep-alive>
+  <div id="app">
     <router-view/>
-  </keep-alive>
+  </div>
 </template>
 
 <script>
@@ -10,9 +10,9 @@
   }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus" scoped>
-  #app
+<style>
+  #app {
     width: 100%;
     height: 100%;
+  }
 </style>
-

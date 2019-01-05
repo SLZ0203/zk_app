@@ -1,16 +1,18 @@
 <template>
-  <div class="scroll_wrap">
-    <ul class="news_list">
-      <li class="news_item" v-for="(item,index) in news" :key="index"> <!--@click="goTo(item.url)"-->
-        <a :href="item.url">
-          <div class="text">
-            {{item.title}}
-          </div>
-          <img :src="'http://yixin.581vv.com'+item.thumb" alt="">
-        </a>
-      </li>
-      <p class="add_more">{{moreTxt}}</p>
-    </ul>
+  <div class="scroll_wrap" ref="scroll_wrap">
+    <div class="inner_wrap" :class="{height:height}">
+      <ul class="news_list">
+        <li class="news_item" v-for="(item,index) in news" :key="index" ref="liHeight">
+          <a :href="item.url">
+            <div class="text">
+              {{item.title}}
+            </div>
+            <img v-lazy="'http://www.sinomis.com'+item.thumb" alt="">
+          </a>
+        </li>
+      </ul>
+    </div>
+    <p class="bottom-tip" v-show="tipShow">{{pullupMsg}}</p>
   </div>
 </template>
 
@@ -23,24 +25,29 @@
     data() {
       return {
         news: [],
-        moreTxt: '加载更多'
+        pullupMsg: '加载更多',
+        isShow: false,
+        page: 1,
+        height: true,
+        tipShow: false
       }
     },
     async mounted() {
       const result = await reqNews(1, 1);
-      this.news = result.data;
-      this._initScroll()
+      console.log(result);
+      if (result.code === 200) {
+        this.news = result.data;
+        this._initScroll()
+      }
     },
     methods: {
       _initScroll() {
-        this.$nextTick(() => {
-          if (!this.scroll) {
-            this.scroll = new BScroll('.scroll_wrap', {
+        const that = this;
+        that.$nextTick(() => {
+          if (!that.scroll) {
+            that.scroll = new BScroll('.scroll_wrap', {
               click: true,
               scrollY: true,
-              pullUpLoad: {
-                threshold: -10, // 当上拉到超过底部 50px 时，
-              },
               mouseWheel: {    // pc端同样能滑动
                 speed: 20,
                 invert: false
@@ -48,60 +55,90 @@
               useTransition: false  // 防止iphone微信滑动卡顿
             })
           } else {
-            this.scroll.refresh();
+            that.scroll.refresh();
           }
-          this.scroll.on('pullingUp', async () => {
-            this.moreTxt = '加载中...';
-            await reqNews(1, 2).then(res => {
-              if (this.news.length < 50) {
-                this.moreTxt = '加载更多';
-                this.news = this.news.concat(res.data);
-                this.scroll.finishPullUp();//可以多次执行上拉刷新
-                this.scroll.refresh();
-              } else {
-                this.moreTxt = '- 没有更多资讯了 -';
+          that.scroll.on('touchEnd', async (position) => {
+            if (position.y < (this.scroll.maxScrollY - 30)) {
+              that.pullupMsg = '加载中...';
+              that.tipShow = true;
+              that.isHeight();
+              that.page++;
+              const result = await reqNews(1, that.page);
+              if (result.code = 200) {
+                if (!result.data) {
+                  that.pullupMsg = '— 没有更多资讯了 —';
+                } else {
+                  this.news = this.news.concat(result.data);
+                  this.scroll.refresh();
+                }
+                setTimeout(() => {
+                  that.tipShow = false;
+                  that.pullupMsg = '加载更多'
+                }, 1000);
               }
-            })
+            }
           })
         });
       },
+      isHeight() {
+        //新闻区域的高度
+        const wrapHei = this.$refs.scroll_wrap.clientHeight;
+        //每条新闻的高度
+        const liHei = this.$refs.liHeight[0].clientHeight;
+        //一屏能显示新闻的个数
+        const pageNum = Math.floor(wrapHei / liHei);
+        if (this.news.length > pageNum) {
+          this.height = false;
+        }
+      }
     }
   }
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>
+  @import "../../../../static/css/mixins.styl"
   .scroll_wrap
     width 100%
-    height 100%
+    position fixed
+    top 6.12rem
+    bottom 0
     overflow hidden
-    .news_list
-      width: 100%;
-      padding-bottom 6rem
-      .news_item
+    background #fff
+    .inner_wrap
+      width 100%
+      &.height
+        height 101%
+      .news_list
         width: 100%;
-        a
+        .news_item
           width: 100%;
-          background: #fff;
-          padding: 0.35rem 0.32rem 0.29rem 0.34rem;
-          box-sizing: border-box;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: 1px;
-        .text
-          width: 5.3rem;
-          font-size: 0.34rem;
-          font-family: PingFangSC-Regular;
-          font-weight: 400;
-          color: rgba(0, 0, 0, 1);
-          line-height: 0.5rem;
-        img
-          width: 1.04rem;
-          height: 1.04rem;
-      .add_more
-        width 100%
-        color #999
-        font-size 0.28rem
-        line-height 1rem
-        text-align: center
+          bottom-border-1px(#ddd)
+          a
+            width: 100%;
+            background: #fff;
+            padding: 0.35rem 0.32rem 0.29rem 0.34rem;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1px;
+          .text
+            width: 5.3rem;
+            font-size: 0.34rem;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            color: rgba(0, 0, 0, 1);
+            line-height: 0.5rem;
+          img
+            width: 1.04rem;
+            height: 1.04rem;
+    .bottom-tip
+      width: 100%;
+      font-size 0.28rem
+      text-align: center;
+      line-height 0.4rem
+      color: #777;
+      background: #f2f2f2;
+      position fixed
+      bottom 0
 </style>

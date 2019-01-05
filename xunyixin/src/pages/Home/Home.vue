@@ -2,11 +2,13 @@
   <div class="choose">
     <div class="inner">
       <div class="user" :class="{on:isChoose}" @click="isChoose=true">
-        <img src="../../../static/images/ic-hospital.png" alt="">
+        <img src="../../../static/images/hos_check.png" v-if="isChoose">
+        <img src="../../../static/images/hos_no.png" v-else>
         <p>我是医院用户</p>
       </div>
       <div class="units" :class="{on:!isChoose}" @click="isChoose=false">
-        <img src="../../../static/images/ic-company.png" alt="">
+        <img src="../../../static/images/com_no.png" v-if="isChoose">
+        <img src="../../../static/images/com_check.png" v-else>
         <p>我是合作单位</p>
       </div>
       <div class="btn" @click="goto">确定</div>

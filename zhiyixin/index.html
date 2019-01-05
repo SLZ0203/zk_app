@@ -1,86 +1,25 @@
-<!--知医信页面-->
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>知医信</title>
   <link rel="stylesheet" href="static/css/reset.css">
-  <link rel="stylesheet" href="static/css/index.css">
-</head>
-<script src="static/js/index.js"></script>
-<script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
-<body>
-<div id="app" v-show="navArr&&imgArr">
-  <div class="blank"></div>
-  <nav class="navBar">
-    <img src="static/images/logo.png" class="logoImg">
-    <img src="static/images/ic-menu.png" @click="isShow=!isShow">
-  </nav>
-  <ul class="navList" v-if="isShow">
-    <li class="nav_item" v-for="(item,index) in navArr" :key="index" :class="{on:num===index}" v-show="navArr"
-        @click="scroll(index)">
-      {{item}}
-    </li>
-  </ul>
-  <transition name="fade">
-    <div class="shade" v-show="isShow" @click="isShow=false"></div>
-  </transition>
-  <div class="scroll_wrap">
-    <ul class="newsList" ref="newsUl">
-      <li class="news_item" v-for="(item,index) in imgArr[num]" :key="index" v-show="navArr">
-        <img :src="'http://yixin.581vv.com/upload/'+item.image" alt="">
-      </li>
-    </ul>
-  </div>
-</div>
-</body>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/better-scroll@1.0.1/dist/bscroll.min.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script>
-  new Vue({
-    el: '#app',
-    data() {
-      return {
-        num: 0,
-        isShow: false,
-        navArr: [],
-        imgArr: [],
-      }
-    },
-    methods: {
-      //页面滑动逻辑
-      _initScroll() {
-        if (!this.myScroll) {
-          this.myScroll = new BScroll('.scroll_wrap', {
-            click: true
-          })
-        } else {
-          this.myScroll.refresh()
-        }
-      },
-      //导航栏点击逻辑
-      scroll(index) {
-        this.num = index;
-        this.isShow = false
-      }
-    },
-    mounted() {
-      axios.get('http://yixin.581vv.com/api/get_navs').then(res => {
-        const result = res.data;
-        const arr = result.data;
-        arr.forEach(item => {
-          this.navArr.push(item.name);
-          this.imgArr.push(item.images);
-        });
-        this.$nextTick(() => {
-          this._initScroll();
-        })
-      }).catch(error => {
-        console.log(error);
-      })
+  <script src="https://as.alipayobjects.com/g/component/fastclick/1.0.6/fastclick.js"></script>
+  <script>
+    if ('addEventListener' in document) {
+      document.addEventListener('DOMContentLoaded', function () {
+        FastClick.attach(document.body);
+      }, false);
     }
-  });
-</script>
+    if (!window.Promise) {
+      document.writeln('<script src="https://as.alipayobjects.com/g/component/es6-promise/3.2.2/es6-promise.min.js"' + '>' + '<' + '/' + 'script>');
+    }
+    document.documentElement.style.fontSize = document.documentElement.clientWidth / 750 * 100 + 'px';
+  </script>
+</head>
+<body>
+<div id="app"></div>
+<!-- built files will be auto injected -->
+</body>
 </html>
